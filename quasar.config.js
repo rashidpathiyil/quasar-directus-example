@@ -75,7 +75,7 @@ module.exports = configure(function (ctx) {
         DIRECTUS_API: ctx.dev
           ? 'http://localhost:8055/'
           : 'https://api.example.com/', // Update your production URL here
-        DIRECTUS_ASSET_URL: 'https://api.example.com/assets/', // Update your asset URL here
+        DIRECTUS_ASSET_URL: 'https://api.example.com/assets/', // Update your asset URL here end with a trailing slash
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
