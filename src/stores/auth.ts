@@ -7,8 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
     me: <PartialItem<UserItem> | null>null,
-    currentUser: null,
-    token: directus.auth.token,
+    user_permissions: [],
   }),
   getters: {
     // doubleCount: (state) => state.counter * 2,
@@ -17,7 +16,6 @@ export const useAuthStore = defineStore('auth', {
 
     // Refresh the token
     async refresh() {
-      console.log(this)
       Loading.show();
       // Try to authenticate with token if exists
       await directus.auth
@@ -50,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
       Loading.show();
       await directus.users.me.read().then(async (me) => {
         this.me = me;
-        // await this.getPermissions()
+        await this.getPermissions()
         Loading.hide();
       }).catch(() => {
         this.isAuthenticated = false;
@@ -60,7 +58,27 @@ export const useAuthStore = defineStore('auth', {
       Loading.hide();
 
     },
+    // Get current user permissions
+    async getPermissions() {
+      const { data } = await directus.permissions.readByQuery({
+        fields: ['action', 'subject', 'fields', 'conditions'],
 
+        alias: {
+          subject: 'collection',
+          conditions: 'permissions',
+        },
+        filter: {
+          collection: {
+            _nstarts_with: 'directus',
+          },
+        },
+      });
+
+      // Update current user permissions state
+      if (data) {
+        this.user_permissions = data as []
+      }
+    },
     // Login
     async login({
       email,
