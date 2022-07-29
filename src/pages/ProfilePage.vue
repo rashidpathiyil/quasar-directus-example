@@ -15,7 +15,7 @@ import { defineComponent } from 'vue';
 import UserLogout from 'src/components/auth/UserLogout.vue';
 // Ability Import
 import { useAbility } from '@casl/vue';
-import { setupMaster } from 'cluster';
+
 export default defineComponent({
   name: 'ProfilePage',
   components: { UserLogout },
